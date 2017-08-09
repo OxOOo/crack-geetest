@@ -1,0 +1,14 @@
+{
+  "name": "crack-geetest",
+  "version": "1.0.0",
+  "description": "crack geetest, 极限验证破解",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "geetest"
+  ],
+  "author": "chenyu <believe.chenyu@gmail.com>",
+  "license": "ISC"
+}
