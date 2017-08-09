@@ -15,6 +15,8 @@ let moves = require('./moves');
 module.exports = class GeeTest {
 
     constructor(debug) {
+        debug.should.be.a.Boolean();
+
         // config
         this.debug = debug;
 
@@ -32,6 +34,10 @@ module.exports = class GeeTest {
 
     // return null if not success
     async Validate(gt, challenge, site) {
+        gt.should.be.a.String().and.not.empty();
+        challenge.should.be.a.String().and.not.empty();
+        site.should.be.a.String().and.not.empty();
+
         this.header['Referer'] = site;
         this.gt = gt;
         this.challenge = challenge;
@@ -46,12 +52,12 @@ module.exports = class GeeTest {
             gt: this.gt,
             callback: 'geetest_'+this.random()
         })).text);
-        res.status.should.be.exactly('success');
-        res.data.should.be.an.Object();
-        res.data.type.should.be.exactly('slide');
-        res.data.static_servers.should.be.an.Array().and.not.empty();
+        res.should.have.property('status').exactly('success');
+        res.should.have.property('data').be.an.Object();
+        res.data.should.have.property('type').exactly('slide');
+        res.data.should.have.property('static_servers').an.Array().and.not.empty();
         res.data.static_servers[0].should.be.a.String().and.not.empty();
-        res.data.path.should.be.a.String();
+        res.data.should.have.property('path').a.String();
 
         this.data_path = res.data.path;
         this.static_server = 'https://' + res.data.static_servers[0];
@@ -71,15 +77,14 @@ module.exports = class GeeTest {
             callback: 'geetest_' + this.random()
         };
         let res = this.parse((await this.request.get('https://api.geetest.com/get.php').set(this.header).query(q)).text);
-        res.api_server.should.be.a.String().and.not.empty();
-        res.version.should.be.exactly('5.10.10');
-        res.height.should.be.exactly(116);
-        res.xpos.should.be.exactly(0);
-        res.bg.should.be.a.String().and.not.empty();
-        res.fullbg.should.be.a.String().and.not.empty();
-        res.slice.should.be.a.String().and.not.empty();
-        res.challenge.should.be.a.String().and.not.empty();
-        res.api_server.should.be.exactly('https://api.geetest.com/');
+        res.should.have.property('api_server').exactly('https://api.geetest.com/');
+        res.should.have.property('version').exactly('5.10.10');
+        res.should.have.property('height').exactly(116);
+        res.should.have.property('xpos').exactly(0);
+        res.should.have.property('bg').a.String().and.not.empty();
+        res.should.have.property('fullbg').a.String().and.not.empty();
+        res.should.have.property('slice').a.String().and.not.empty();
+        res.should.have.property('challenge').a.String().and.not.empty();
 
         this.bg_url = this.static_server + res.bg;
         this.fullbg_url = this.static_server + res.fullbg;
@@ -127,9 +132,9 @@ module.exports = class GeeTest {
         };
 
         let rst = this.parse((await this.request.get('https://api.geetest.com/ajax.php').set(this.header).query(p)).text);
-        rst.success.should.be.an.Number();
+        rst.should.have.property('success').an.Number();
         if (rst.success === 1) {
-            rst.validate.should.be.a.String().and.not.empty();
+            rst.should.have.property('validate').a.String().and.not.empty();
         }
         
         if (!this.debug) {
