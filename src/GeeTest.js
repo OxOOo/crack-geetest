@@ -51,7 +51,7 @@ module.exports = class GeeTest {
         let res = this.parse((await this.request.get('https://api.geetest.com/gettype.php').set(this.header).query({
             gt: this.gt,
             callback: 'geetest_'+this.random()
-        })).text);
+        }).timeout(2000).retry(10)).text);
         res.should.have.property('status').exactly('success');
         res.should.have.property('data').be.an.Object();
         res.data.should.have.property('type').exactly('slide');
@@ -144,35 +144,24 @@ module.exports = class GeeTest {
         return rst.success === 1 ? rst : null;
     }
 
-    downloadImages() {
-        return new Promise((resolve, reject) => {
-            async.parallel([
-                (callback) => {
-                    let s = this.request.get(this.bg_url);
-                    this.bg_path = path.join(this.files_dir, path.basename(this.bg_url));
-                    s.pipe(fs.createWriteStream(this.bg_path));
-                    s.on('end', () => callback());
-                    s.on('err', callback);
-                },
-                (callback) => {
-                    let s = this.request.get(this.slice_url);
-                    this.slice_path = path.join(this.files_dir, path.basename(this.slice_url));
-                    s.pipe(fs.createWriteStream(this.slice_path));
-                    s.on('end', () => callback());
-                    s.on('err', callback);
-                },
-                (callback) => {
-                    let s = this.request.get(this.fullbg_url);
-                    this.fullbg_path = path.join(this.files_dir, path.basename(this.fullbg_url));
-                    s.pipe(fs.createWriteStream(this.fullbg_path));
-                    s.on('end', () => callback());
-                    s.on('err', callback);
-                },
-            ], (err, results) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+    async downloadImages() {
+        await Promise.all([
+            (async () => {
+                let s = (await this.request.get(this.bg_url).timeout(1000).retry(10)).body;
+                this.bg_path = path.join(this.files_dir, path.basename(this.bg_url));
+                await mzfs.writeFile(this.bg_path, s);
+            })(),
+            (async () => {
+                let s = (await this.request.get(this.slice_url).timeout(1000).retry(10)).body;
+                this.slice_path = path.join(this.files_dir, path.basename(this.slice_url));
+                await mzfs.writeFile(this.slice_path, s);
+            })(),
+            (async () => {
+                let s = (await this.request.get(this.fullbg_url).timeout(1000).retry(10)).body;
+                this.fullbg_path = path.join(this.files_dir, path.basename(this.fullbg_url));
+                await mzfs.writeFile(this.fullbg_path, s);
+            })()
+        ]);
     }
     recoverImage(input_img, output_img) {
         const n = (function() {
