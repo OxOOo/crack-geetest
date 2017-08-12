@@ -136,6 +136,7 @@ module.exports = class GeeTest {
         if (rst.success === 1) {
             rst.should.have.property('validate').a.String().and.not.empty();
         }
+        rst.challenge = this.challenge;
         
         if (!this.debug) {
             await del(this.files_dir, {force: true});

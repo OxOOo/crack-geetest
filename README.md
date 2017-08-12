@@ -21,4 +21,4 @@
 let crack_geetest = require('./');
 ```
 
-* `crack_geetest(gt, challenge, site, [config])`: 做一次验证，成功则返回验证的结果，否则返回null。
+* `crack_geetest(gt, challenge, site, [config])`: 做一次验证，成功则返回验证的结果和challenge，否则返回null。
