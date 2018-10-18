@@ -1,0 +1,85 @@
+
+<!DOCTYPE html><html data-dpr=1><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=referrer content=always><title>哔哩哔哩弹幕视频网 - ( ゜- ゜)つロ 乾杯~ - bilibili</title><meta name=spm_prefix content=333.130><link rel="shortcut icon" href=//static.hdslb.com/images/favicon.ico><meta name=description content=bilibili是一家弹幕站点,大家可以在这里找到许多的欢乐.><meta name=keywords content="B站 弹幕 字幕 AMV MAD MTV ANIME 动漫 动漫音乐 游戏 游戏解说 ACG galgame 动画 番组 新番 初音 洛天依 vocaloid"><meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui"><meta name=spm_prefix content=333.130><link rel=search type=application/opensearchdescription+xml href=//static.hdslb.com/opensearch.xml title=哔哩哔哩><link rel=stylesheet href=//static.hdslb.com/css/core-v5/page-core.css><script type=text/javascript>if(window.location.protocol === 'http:'){
+    var result = window.location.search.match(new RegExp("[\?\&]gourl=([^\&]+)", "i"))
+    var gourl = (result==null || result.length<0) ? document.referrer : result[1]
+    window.location.href = 'https://passport.bilibili.com/login?gourl='+gourl
+  }
+   window.reportMsgObj = {}
+   window.reportConfig = {
+     sample: 1,
+     scrollTracker: false,
+     msgObjects: 'reportMsgObj'
+   }</script>
+   <script type=text/javascript src=//static.hdslb.com/js/jquery.min.js></script>
+   <script type=text/javascript src=//static.hdslb.com/plugins/resource/qrcode.min.js></script>
+   <script type=text/javascript src=//static.hdslb.com/plugins/resource/jsencrypt.min.js></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
+   <link href=//s1.hdslb.com/bfs/static/passport/static/css/login.815cd9fd5f731a5cf1ccc76d4c91cb9a.css rel=stylesheet>
+</head><body><div id=login-app><app></app></div><script type=text/javascript src=//s1.hdslb.com/bfs/static/passport/static/js/manifest.48d036bb4123e90570f9.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/passport/static/js/vendor.9fab4f4dac488dec4de0.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/passport/static/js/login.4421127415ab7fa42365.js></script></body></html><script type=text/javascript>var isMobile = /AppleWebKit.*Mobile.*/i.test(navigator.userAgent)
+
+if(!isMobile){
+ $.ajax({
+   url:'//s1.hdslb.com/bfs/seed/jinkela/header/header.js',
+   dataType: "script",
+   cache:true
+ })
+
+ $.ajax({
+   url:'//static.hdslb.com/common/js/footer.js',
+   dataType: "script",
+   cache:true
+ }).done(function(){
+   var dest = $(window).height() - 855
+         var mtop = dest < 0 ? 50 : dest
+         $('.footer').css({ 'marginTop': mtop })
+ })
+
+ var JPlaceHolder = {
+       //检测浏览器是否支持 placeholder
+       _check : function(){
+           return 'placeholder' in document.createElement('input');
+       },
+       //初始化
+       init : function(){
+           if(!this._check()){
+               this.fix();
+           }
+       },
+       //修复
+       fix : function(){
+           jQuery(':input[placeholder]').each(function(index, element) {
+               var self = $(this), txt = self.attr('placeholder');
+               self.wrap($('<div></div>').css({position:'relative',display:'inline-block', zoom:'1', border:'none', background:'none', padding:'none', margin:'none'}));
+               var pos = self.position(), paddingleft = self.css('padding-left');
+               var holder = $('<span></span>').text(txt).css({position:'absolute', left:pos.left, top:'10px',fontSize:'14px', paddingLeft:paddingleft,color:'#aaa'}).appendTo(self.parent());
+               self.focusin(function(e) {
+                   holder.hide();
+               }).focusout(function(e) {
+                   if(!self.val()){
+                       holder.show();
+                   }
+               });
+               holder.click(function(e) {
+                   holder.hide();
+                   self.focus();
+               });
+           });
+       }
+   };
+   //执行
+   $(function(){
+       JPlaceHolder.init();
+   });
+}
+//数据上报
+var reportScript = document.createElement('script')
+reportScript.src = '//s1.hdslb.com/bfs/seed/log/report/log-reporter.js';
+document.getElementsByTagName('body')[0].appendChild(reportScript)
+if(isMobile){
+ window.rec_rp = window.rec_rp || function() {(rec_rp.q = rec_rp.q || [
+     ['ptype', 2]
+ ]).push(arguments)};
+}else{
+ window.rec_rp = window.rec_rp || function() {(rec_rp.q = rec_rp.q || []).push(arguments)};
+}</script>
