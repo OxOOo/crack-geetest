@@ -37,6 +37,7 @@ module.exports = class GeeTest {
             'Referer': '',
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/59.0.3071.109 Chrome/59.0.3071.109 Safari/537.36'
         };
+        this.stage_get_q_extend = {};
     }
 
     // return null if not success
@@ -50,6 +51,9 @@ module.exports = class GeeTest {
         this.challenge = challenge;
 
         await this.runGetType();
+        if (this.type == 'fullpage') {
+            await this.runGetFullpage();
+        }
         await this.runGet();
         return await this.runAjax();
     }
@@ -65,16 +69,45 @@ module.exports = class GeeTest {
         }
         res.should.have.property('status').exactly('success');
         res.should.have.property('data').be.an.Object();
-        res.data.should.have.property('type').exactly('slide');
+        res.data.should.have.property('type'); //  slide/fullpage
         res.data.should.have.property('static_servers').an.Array().and.not.empty();
         res.data.static_servers[0].should.be.a.String().and.not.empty();
-        res.data.should.have.property('path').a.String();
+        // res.data.should.have.property('path').a.String();
 
+        this.type = res.data.type;
         this.data_path = res.data.path;
         this.data_pencil = res.data.pencil;
         this.data_voice = res.data.voice;
         this.static_server = 'https://' + res.data.static_servers[0];
         if (!this.static_server.endsWith('/')) this.static_server += '/';
+    }
+
+    async runGetFullpage() {
+        let q = {
+            gt: this.gt,
+            challenge: this.challenge,
+            lang: 'zh-cn',
+            pt: 0,
+            callback: 'geetest_' + this.random()
+        }
+        let res = this.parse((await this.request.get('https://api.geetest.com/get.php').set(this.header).query(q)).text);
+        if (this.debug) {
+            console.log('=============runGetFullpage[1]===========');
+            console.log(res);
+        }
+        res = this.parse((await this.request.get('https://api.geetest.com/ajax.php').set(this.header).query(q)).text);
+        if (this.debug) {
+            console.log('=============runGetFullpage[2]===========');
+            console.log(res);
+        }
+        this.stage_get_q_extend = {
+            is_next: true,
+            type: 'slide3',
+            lang: 'zh-cn',
+            https: false,
+            product: 'embed',
+            api_server: 'api.geetest.com'
+        }
     }
 
     async runGet() {
@@ -91,6 +124,7 @@ module.exports = class GeeTest {
             path: this.data_path,
             callback: 'geetest_' + this.random()
         };
+        q = _.assign(q, this.stage_get_q_extend);
         let res = this.parse((await this.request.get('https://api.geetest.com/get.php').set(this.header).query(q)).text);
         if (this.debug) {
             console.log('=============get.php===========');
@@ -98,7 +132,7 @@ module.exports = class GeeTest {
         }
         res.should.have.property('api_server').exactly('https://api.geetest.com/');
         res.should.have.property('version').exactly('6.0.9');
-        res.should.have.property('height').exactly(116);
+        // res.should.have.property('height').exactly(116);
         res.should.have.property('xpos').exactly(0);
         res.should.have.property('bg').a.String().and.not.empty();
         res.should.have.property('fullbg').a.String().and.not.empty();
